@@ -23,7 +23,9 @@ const isAdmin = (req, res, next) => {
     return res.status(401).json({ error: 'Authentication required' });
   }
   const roles = req.user.role || req.user.roles || req.user.authorities || [];
-  const hasRole = Array.isArray(roles) ? roles.includes('admin') || roles.includes('ROLE_ADMIN') : roles === 'admin';
+  const hasRole = Array.isArray(roles)
+    ? roles.includes('admin') || roles.includes('ROLE_ADMIN')
+    : roles === 'admin';
   if (hasRole) {
     next();
   } else {
@@ -32,19 +34,18 @@ const isAdmin = (req, res, next) => {
 };
 
 // Higher-order function for role-based authorization
-const authorize = (...allowedRoles) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({ error: 'Authentication required' });
-    }
-    const userRoles = req.user.role ? [req.user.role] : (req.user.roles || req.user.authorities || []);
-    const hasPermission = allowedRoles.some((role) => userRoles.includes(role));
-    if (hasPermission) {
-      next();
-    } else {
-      return res.status(403).json({ error: 'Insufficient permissions' });
-    }
-  };
+const authorize = (...allowedRoles) => (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+  const userRoles = req.user.role
+    ? [req.user.role]
+    : (req.user.roles || req.user.authorities || []);
+  const hasPermission = allowedRoles.some((role) => userRoles.includes(role));
+  if (hasPermission) {
+    return next();
+  }
+  return res.status(403).json({ error: 'Insufficient permissions' });
 };
 
 module.exports = {
