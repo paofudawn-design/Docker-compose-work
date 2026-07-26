@@ -1,0 +1,35 @@
+{
+  // ESLint 配置
+  "eslint.format.enable": true,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.formatOnSave": true,
+  
+  // 代码格式化配置
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  
+  // 文件排除
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true
+  },
+  
+  // 终端配置
+  "terminal.integrated.defaultProfile.linux": "bash",
+  
+  // 文件关联
+  "files.associations": {
+    "*.ejs": "html"
+  },
+  
+  // 自动保存
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  
+  // 缩进配置
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false
+}

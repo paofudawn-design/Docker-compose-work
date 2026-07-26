@@ -1,0 +1,77 @@
+// JHipster 应用 JDL - 员工管理系统
+// 使用 start.jhipster.tech 或本地 jhipster jdl 命令导入
+
+application {
+  config {
+    applicationType monolith
+    baseName employeeManager
+    packageName com.employeemanager
+    buildTool maven
+    authenticationType jwt
+    cacheProvider hazelcast
+    enableHibernateCache true
+    databaseType sql
+    prodDatabaseType postgresql
+    devDatabaseType postgresql
+    clientFramework react
+    testFrameworks [cypress]
+    languages [en, zh-cn]
+    nativeLanguage en
+    jhipsterVersion 9.2.0
+    skipFakeData false
+    enableTranslation true
+  }
+
+  entities *
+}
+
+// ============================================================
+// 实体定义
+// Employee - 员工信息（对应现有项目的 employees 集合）
+// Department - 部门
+// JobHistory - 职位历史
+// ============================================================
+
+entity Employee {
+  name String required minlength(3) maxlength(30)
+  job String required minlength(3) maxlength(30)
+  email String unique
+  phone String
+  salary BigDecimal min(0)
+}
+
+entity Department {
+  departmentName String required unique
+  description String maxlength(200)
+  location String
+}
+
+entity JobHistory {
+  startDate Instant required
+  endDate Instant
+  isCurrent Boolean required
+}
+
+// ============================================================
+// 关联关系
+// ============================================================
+
+relationship OneToMany {
+  Department{employee} to Employee{department(name) required}
+}
+
+relationship ManyToOne {
+  Employee{manager} to Employee
+  JobHistory{employee(name)} to Employee
+  JobHistory{department(departmentName)} to Department
+}
+
+// ============================================================
+// DTO & Service & 分页配置
+// ============================================================
+
+dto * with mapstruct
+service all with serviceImpl
+paginate Employee with pagination
+paginate Department with pagination
+paginate JobHistory with infinite-scroll

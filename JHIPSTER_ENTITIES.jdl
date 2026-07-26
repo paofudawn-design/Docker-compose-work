@@ -1,0 +1,38 @@
+// Employee Manager Entity Definitions for JHipster
+// Monolithic + PostgreSQL + React + JWT
+
+// 实体定义
+entity Employee {
+  name String required minlength(3) maxlength(30)
+  job String required minlength(3) maxlength(30)
+  email String unique
+  phone String
+  salary BigDecimal min(0)
+}
+
+entity Department {
+  departmentName String required unique
+  description String maxlength(200)
+  location String
+}
+
+entity JobHistory {
+  startDate Instant required
+  endDate Instant
+  isCurrent Boolean required
+}
+
+// 关联关系 - Employee 属于一个 Department
+relationship OneToMany {
+  Department to Employee
+}
+
+relationship ManyToOne {
+  Employee{manager(name)} to Employee
+  JobHistory{employee(name)} to Employee
+  JobHistory{department(departmentName)} to Department
+}
+
+// DTO & Service
+dto * with mapstruct
+service all with serviceImpl
