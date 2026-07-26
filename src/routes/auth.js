@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../db/connection');
 const { userSchema, loginSchema } = require('../db/schema');
 const { generateToken } = require('../config/jwt');
-const { authenticateJWT } = require('../middlewares/auth');
+const { isAuthenticated } = require('../middlewares/auth');
 
 const users = db.get('user');
 const router = express.Router();
@@ -133,7 +133,7 @@ router.post('/authenticate', async (req, res, next) => {
  * 检查认证状态
  * GET /api/authenticate
  */
-router.get('/authenticate', authenticateJWT, (req, res) => {
+router.get('/authenticate', isAuthenticated, (req, res) => {
   res.json({
     authenticated: true,
     username: req.user.username,
@@ -144,7 +144,7 @@ router.get('/authenticate', authenticateJWT, (req, res) => {
  * 获取当前用户账户信息
  * GET /api/account
  */
-router.get('/account', authenticateJWT, async (req, res, next) => {
+router.get('/account', isAuthenticated, async (req, res, next) => {
   try {
     const user = await users.findOne(
       { username: req.user.username },
